@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Headless export (sample-data path, no API key)
+        run: uvx marimo export html --sandbox live_tennis_dashboard.py -o /tmp/export.html
+      - name: Assert sample data rendered
+        run: |
+          grep -q "Sample data" /tmp/export.html
+          grep -q "Marchetti" /tmp/export.html
